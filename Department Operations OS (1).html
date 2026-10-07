@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Department Operations OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);--bg:#f4f1ff;--card:#fff;--tx:#1e1b3a;--mut:#6b6990;--bd:#e5e0fa;--p:#7c3aed;--p2:#ec4899;--in:#f8f6ff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14122b;--card:#1e1b3d;--tx:#f1eeff;--mut:#a39fcf;--bd:#322e5e;--in:#27234d}}
+:root[data-theme="dark"]{--bg:#14122b;--card:#1e1b3d;--tx:#f1eeff;--mut:#a39fcf;--bd:#322e5e;--in:#27234d}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:10px;background:var(--in);margin:4px 0 10px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--p);border-color:transparent}
+label{font-size:12px;font-weight:600;color:var(--mut)}
+.btn{border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff}
+.btn.g{background:var(--in);color:var(--tx);border:1.5px solid var(--bd)}.btn.s{padding:6px 12px;font-size:13px}
+.btn.ok{background:linear-gradient(135deg,#10b981,#06b6d4)}.btn.wr{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+#auth{min-height:100%;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#7c3aed,#ec4899 55%,#f59e0b)}
+.ac{background:var(--card);border-radius:22px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px #0004}
+.ac h1{margin:0 0 4px;font-size:24px}.tabs{display:flex;gap:6px;background:var(--in);padding:4px;border-radius:12px;margin:14px 0}
+.tabs button{flex:1;border:0;background:none;padding:8px;border-radius:9px;font-weight:600;cursor:pointer;color:var(--mut)}
+.tabs button.on{background:var(--card);color:var(--p);box-shadow:0 1px 4px #0002}
+.err{color:#e11d48;font-size:13px;min-height:18px}.demo{background:#fef3c7;color:#78350f;border-radius:10px;padding:10px;font-size:13px;margin-bottom:10px}
+#app{display:flex;min-height:100%}
+nav{width:230px;background:linear-gradient(180deg,#5b21b6,#be185d);color:#fff;padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px;flex-shrink:0}
+nav .logo{font-weight:800;font-size:17px;padding:4px 10px 14px}nav .logo small{display:block;font-weight:500;opacity:.75;font-size:11px}
+nav a{display:flex;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:#ffffffd0;font-weight:600;align-items:center}
+nav a.on,nav a:hover{background:#ffffff26;color:#fff}nav .me{margin-top:auto;font-size:13px;padding:10px;background:#ffffff1f;border-radius:12px}
+nav .b{background:#fde047;color:#451a03;border-radius:20px;padding:0 7px;font-size:11px;margin-left:auto}
+main{flex:1;padding:22px;min-width:0;max-width:1300px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.top h2{margin:0;font-size:24px;flex:1}
+.grid{display:grid;gap:12px}.stats{grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+.stat{border-radius:16px;padding:14px;color:#fff}.stat b{font-size:28px;display:block}.stat span{font-size:12px;font-weight:600;opacity:.95}
+.cols{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}.card h3{margin:0 0 10px;font-size:15px}
+.row{display:flex;gap:10px;align-items:center;padding:9px 6px;border-radius:10px;cursor:pointer;border-bottom:1px solid var(--bd)}.row:hover{background:var(--in)}
+.row .t{flex:1;min-width:0}.row .t b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row small{color:var(--mut)}
+.chip{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.dl{font-size:12px;font-weight:700;white-space:nowrap}.mut{color:var(--mut)}
+.kb{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px}.kc{min-width:250px;flex:1;background:var(--in);border-radius:14px;padding:10px;border-top:5px solid}
+.kc h4{margin:2px 4px 10px;font-size:12px;display:flex;justify-content:space-between}
+.kt{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;margin-bottom:8px;cursor:grab}.kt b{display:block;margin-bottom:6px}
+table{width:100%;border-collapse:collapse;font-size:14px}th{text-align:left;font-size:12px;color:var(--mut);padding:8px;border-bottom:2px solid var(--bd)}td{padding:10px 8px;border-bottom:1px solid var(--bd)}tr.r{cursor:pointer}tr.r:hover{background:var(--in)}
+.bar{height:8px;border-radius:8px;background:var(--in);overflow:hidden;min-width:60px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--p),var(--p2))}
+.ov{position:fixed;inset:0;background:#0007;z-index:20;display:flex;justify-content:flex-end}
+.dr{background:var(--card);width:min(560px,100%);height:100%;overflow:auto;padding:20px;padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.md{margin:auto;background:var(--card);width:min(480px,94%);border-radius:18px;padding:22px;max-height:92%;overflow:auto;align-self:center}
+.cm{background:var(--in);border-radius:12px;padding:10px;margin:8px 0}.cm small{color:var(--mut)}
+.tl{border-left:3px solid var(--p);padding-left:12px;margin:8px 0 8px 6px;font-size:13px}.tl small{color:var(--mut);display:block}
+.ntf{border-left:5px solid var(--p);background:var(--card);padding:12px;border-radius:12px;margin-bottom:8px;cursor:pointer}.ntf.u{background:var(--in);font-weight:600}
+#toast{position:fixed;left:50%;bottom:calc(80px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1e1b3a;color:#fff;padding:10px 18px;border-radius:30px;z-index:50;display:none;max-width:90%}
+@media(max-width:800px){nav{position:fixed;bottom:0;left:0;right:0;top:auto;width:auto;height:auto;flex-direction:row;overflow-x:auto;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:10;gap:2px}
+nav .logo,nav .me{display:none}nav a{flex-direction:column;gap:0;font-size:11px;padding:6px 10px;min-width:62px;text-align:center;align-items:center}main{padding:14px 12px 90px}}
+</style></head><body>
+<div id="auth"></div><div id="app" style="display:none"></div><div id="toast"></div>
+<script>
+const ST=['TO DO','IN PROGRESS','IN REVIEW','FEEDBACK REQUIRED','APPROVED','COMPLETED'];
+const SC={'TO DO':'#64748b','IN PROGRESS':'#3b82f6','IN REVIEW':'#f59e0b','FEEDBACK REQUIRED':'#ef4444','APPROVED':'#8b5cf6','COMPLETED':'#10b981'};
+const PC={Low:'#10b981',Medium:'#3b82f6',High:'#f97316',Urgent:'#e11d48'};
+const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=s=>document.querySelector(s);
+const dt=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};
+const now=()=>new Date().toISOString();
+const ago=iso=>{const m=Math.round((Date.now()-new Date(iso))/6e4);return m<1?'just now':m<60?m+'m ago':m<1440?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
+const KEY='deptos_v1';let S,V='dash',OPEN=null,Q='',FS='';
+const U=(id,name,role,title,email,phone,c)=>({id,name,role,title,email,phone,c});
+function seed(){const u=[U(1,'Dr. Nusrat Jahan','Department Head','Head of Department','head@diu-demo.edu','+8801711000001','#7c3aed'),
+U(2,'Rashed Karim','Manager','Program Coordinator','rashed@diu-demo.edu','+8801711000002','#ec4899'),
+U(3,'Fahmi Hasan','Faculty / Staff','Marketing Coordinator','fahmi@diu-demo.edu','+8801711000003','#f59e0b'),
+U(4,'Apo Sarker','Faculty / Staff','Student Affairs Coordinator','apo@diu-demo.edu','+8801711000004','#10b981'),
+U(5,'Chandan Das','Faculty / Staff','Administrative Assistant','chandan@diu-demo.edu','+8801711000005','#3b82f6'),
+U(6,'Dr. Tania Rahman','Faculty / Staff','Research Coordinator','tania@diu-demo.edu','+8801711000006','#ef4444')];
+const P=['Startup Market 2026','Industry-Academia Lecture Series','Student Entrepreneurship Program','Research Conference','Alumni Engagement Program'];
+const mk=(id,title,pr,a,m,pri,st,due,desc,subs)=>({id:'T-'+id,title,project:P[pr],an:a.name,ae:a.email,ap:a.phone,m,by:m,pri,st,due,desc,created:now(),
+subs:subs.map(s=>({t:s[0],d:!!s[1]})),cm:[{by:m,t:'Please keep this updated here so everyone can follow.',at:now()}],log:[{at:now(),txt:'Task created and assigned to '+a.name}]});
+const sad={name:'Sadia Islam',email:'sadia@example.com',phone:'+8801700000001'};
+const t=[mk(101,'Prepare Startup Market registration form',0,u[2],2,'High','IN PROGRESS',dt(2),'Objective: collect student and vendor registrations.\n- Add emergency contact field\n- Add T-shirt size',[['Draft form',1],['Add emergency contact',0],['Publish link',0]]),
+mk(102,'Confirm vendors for Startup Market',0,u[3],2,'Urgent','TO DO',dt(-2),'Call and confirm 12 vendors; collect trade licences.',[['Call vendors',1],['Collect licences',0]]),
+mk(103,'Design poster for 18th Industry-Academia Lecture',1,u[2],2,'High','IN REVIEW',dt(1),'Poster A3 + social square version.',[['Concept',1],['Final art',1]]),
+mk(104,'Contact speaker and confirm venue',1,u[3],1,'High','FEEDBACK REQUIRED',dt(3),'Speaker confirmation letter and venue booking.',[['Email speaker',1],['Book auditorium',0]]),
+mk(105,'Student pitch day attendance sheet',2,u[3],2,'Medium','TO DO',dt(6),'Prepare attendance sheet and ID checks.',[]),
+mk(106,'Abstract submission portal setup',3,u[5],1,'High','IN PROGRESS',dt(9),'Set up portal for conference abstracts.',[['Choose platform',1],['Configure fields',0],['Test',0]]),
+mk(107,'Monthly social media report',2,u[2],2,'Low','APPROVED',dt(0),'Compile reach and engagement for September.',[]),
+mk(108,'Alumni newsletter draft',4,u[1],1,'Medium','COMPLETED',dt(-5),'Quarterly alumni newsletter.',[]),
+mk(109,'Book projector and sound system',0,u[4],2,'Medium','TO DO',dt(4),'Procurement request for event equipment.',[]),
+mk(110,'Invite industry guests for Startup Market',0,sad,2,'High','TO DO',dt(5),'Send invitations to 20 industry guests. (Pending: sign up as sadia@example.com to claim)',[['Make guest list',0],['Send invites',0]]),
+mk(111,'Draft sponsorship proposal',0,sad,1,'Urgent','TO DO',dt(2),'Two-page sponsorship proposal for local companies.',[])];
+return{users:u,tasks:t,notifs:[],seq:112,me:null,theme:0}}
+function load(){try{S=JSON.parse(localStorage.getItem(KEY))}catch(x){}if(!S||!S.users)S=seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(x){}}
+const me=()=>S.users.find(u=>u.id===S.me);
+const mgr=()=>['Super Admin','Department Head','Manager'].includes(me().role);
+const mine=t=>t.ae===me().email||t.ap===me().phone;
+const uid=id=>S.users.find(u=>u.id===id);
+function toast(m){const x=$('#toast');x.textContent=m;x.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>x.style.display='none',3200)}
+function dl(t){if(t.st==='COMPLETED')return'<span class="dl" style="color:#10b981">✔ Done</span>';
+const d=Math.round((new Date(t.due)-new Date(dt(0)))/864e5);const[c,i,x]=d<0?['#e11d48','🔴',-d+(d===-1?' day overdue':' days overdue')]:d===0?['#d97706','🟡','Due today']:d<=3?['#d97706','🟡',d===1?'Due tomorrow':d+' days remaining']:['#059669','🟢',d+' days remaining'];
+return`<span class="dl" style="color:${c}">${i} ${x}</span>`}
+const od=t=>t.st!=='COMPLETED'&&t.due<dt(0);
+const chip=(x,c)=>`<span class="chip" style="background:${c}">${e(x)}</span>`;
+const prog=t=>t.st==='COMPLETED'?100:t.subs.length?Math.round(t.subs.filter(s=>s.d).length/t.subs.length*100):({'TO DO':0,'IN PROGRESS':40,'IN REVIEW':80,'FEEDBACK REQUIRED':60,'APPROVED':95})[t.st];
+function notify(t,txt,toEmail,toPhone){if(toEmail===me().email)return;S.notifs.unshift({id:Date.now()+Math.random(),to:toEmail,tp:toPhone,txt,tid:t.id,at:now(),r:0,ch:['In-app','Email','WhatsApp']})}
+function log(t,txt){t.log.unshift({at:now(),txt:me().name+' '+txt})}
+function phone(p){p=String(p).replace(/[^\d+]/g,'');if(/^01\d{9}$/.test(p))p='+88'+p;if(/^8801\d{9}$/.test(p))p='+'+p;return p}
+/* ---------- AUTH ---------- */
+let A={mode:'signup',step:1,f:{},code:null,err:''};
+function authView(){const a=A,s=a.mode==='signup';
+let h=`<div class="ac"><h1>🎓 Department Operations OS</h1><div class="mut">Innovation &amp; Entrepreneurship</div>
+<div class="tabs"><button class="${s?'on':''}" onclick="A={mode:'signup',step:1,f:{},err:''};authView()">Sign up</button><button class="${s?'':'on'}" onclick="A={mode:'login',step:1,f:{},err:''};authView()">Log in</button></div>`;
+if(a.step===1){h+=s?`<label>Full name</label><input id="n" placeholder="e.g. Sadia Islam" value="${e(a.f.n||'')}">
+<label>Email</label><input id="em" type="email" placeholder="you@university.edu" value="${e(a.f.em||'')}">
+<label>WhatsApp number</label><input id="ph" type="tel" placeholder="+8801XXXXXXXXX" value="${e(a.f.ph||'')}">`:
+`<label>Email or WhatsApp number</label><input id="id" placeholder="you@university.edu or +8801…">`;
+h+=`<div class="err">${e(a.err)}</div><button class="btn" style="width:100%" onclick="authNext()">Send verification code</button>
+<div class="mut" style="font-size:12px;margin:12px 0 6px">Just exploring? Try a demo account:</div>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn g s" onclick="enter(1)">Dept. Head</button><button class="btn g s" onclick="enter(2)">Manager</button><button class="btn g s" onclick="enter(3)">Staff</button></div>
+<div class="mut" style="font-size:12px;margin-top:10px">Tip: sign up with <b>sadia@example.com</b> to see pre-assigned tasks link automatically.</div>`}
+else h+=`<div class="demo">📲 Demo mode: codes would be sent by email &amp; WhatsApp. Your code is <b>${a.code}</b></div>
+<label>Enter 6-digit code</label><input id="cd" inputmode="numeric" maxlength="6" placeholder="••••••"><div class="err">${e(a.err)}</div>
+<button class="btn" style="width:100%" onclick="authVerify()">Verify &amp; continue</button><button class="btn g s" style="margin-top:8px" onclick="A.step=1;A.err='';authView()">← Back</button>`;
+$('#auth').innerHTML=h+'</div>'}
+function authNext(){const a=A;a.err='';
+if(a.mode==='signup'){a.f={n:$('#n').value.trim(),em:$('#em').value.trim().toLowerCase(),ph:phone($('#ph').value)};
+if(a.f.n.length<2)a.err='Please enter your name.';else if(!/^\S+@\S+\.\S+$/.test(a.f.em))a.err='Enter a valid email.';else if(!/^\+\d{10,15}$/.test(a.f.ph))a.err='Enter WhatsApp number with country code, e.g. +8801XXXXXXXXX';
+else if(S.users.some(u=>u.email===a.f.em||u.phone===a.f.ph))a.err='An account with this email or number already exists. Please log in.'}
+else{const v=$('#id').value.trim().toLowerCase(),u=S.users.find(u=>u.email===v||u.phone===phone(v));if(!u)a.err='No account found. Please sign up.';else a.f={uid:u.id}}
+if(a.err)return authView();a.code=String(Math.floor(100000+Math.random()*900000));a.step=2;authView()}
+function authVerify(){if($('#cd').value.trim()!==A.code){A.err='Incorrect code. Try again.';return authView()}
+if(A.mode==='login')return enter(A.f.uid);
+const id=Math.max(...S.users.map(u=>u.id))+1,cols=['#7c3aed','#ec4899','#f59e0b','#10b981','#3b82f6'];
+S.users.push(U(id,A.f.n,'Faculty / Staff','Faculty / Staff',A.f.em,A.f.ph,cols[id%5]));S.me=id;save();
+const n=S.tasks.filter(t=>t.ae===A.f.em||t.ap===A.f.ph).length;boot();toast(n?`🎉 Welcome! ${n} pending task${n>1?'s':''} linked to your account.`:'🎉 Welcome to Department Operations OS!')}
+function enter(id){S.me=id;save();boot()}
+function logout(){S.me=null;save();A={mode:'login',step:1,f:{},err:''};boot()}
+/* ---------- APP ---------- */
+function boot(){if(!S.me||!me()){$('#app').style.display='none';$('#auth').style.display='grid';return authView()}
+$('#auth').style.display='none';$('#app').style.display='flex';render()}
+const NAV=[['dash','🏠','Dashboard'],['mine','✅','My Tasks'],['all','📋','All Tasks'],['kanban','🧩','Board'],['inbox','🔔','Inbox'],['people','👥','People']];
+function go(v){V=v;OPEN=null;render()}
+function myNotifs(){return S.notifs.filter(n=>n.to===me().email||n.tp===me().phone)}
+function render(){const m=me(),unread=myNotifs().filter(n=>!n.r).length;
+$('#app').innerHTML=`<nav><div class="logo">🎓 Dept. Ops OS<small>Innovation &amp; Entrepreneurship</small></div>
+${NAV.map(n=>`<a class="${V===n[0]?'on':''}" onclick="go('${n[0]}')"><span>${n[1]}</span>${n[2]}${n[0]==='inbox'&&unread?`<span class="b">${unread}</span>`:''}</a>`).join('')}
+<div class="me"><b>${e(m.name)}</b><br><span style="opacity:.8">${e(m.role)}</span><br><a style="padding:6px 0;display:inline" onclick="logout()">Log out →</a></div></nav><main>${page()}</main>`;
+if(OPEN)drawer()}
+function head(t,extra=''){return`<div class="top"><h2>${t}</h2>${extra}<button class="btn" onclick="newTask()">＋ Create Task</button></div>`}
+function trow(t){const p=S.tasks.includes(t);return`<div class="row" onclick="openT('${t.id}')"><div class="t"><b>${e(t.title)}</b><small>${e(t.id)} · ${e(t.an)} · ${e(t.project)}</small></div>${chip(t.st,SC[t.st])}${dl(t)}</div>`}
+function listBox(title,arr,emptyMsg){return`<div class="card"><h3>${title}</h3>${arr.length?arr.slice(0,6).map(trow).join(''):`<div class="mut">${emptyMsg}</div>`}</div>`}
+function page(){const T=S.tasks;
+if(V==='dash'){const my=T.filter(mine),c=s=>my.filter(t=>t.st===s).length;
+const cards=[['My Tasks',my.length,'#7c3aed,#a855f7'],['To Do',c('TO DO'),'#64748b,#94a3b8'],['In Progress',c('IN PROGRESS'),'#2563eb,#38bdf8'],['In Review',c('IN REVIEW'),'#f59e0b,#fbbf24'],['Feedback',c('FEEDBACK REQUIRED'),'#e11d48,#fb7185'],['Completed',c('COMPLETED'),'#059669,#34d399'],['Overdue',my.filter(od).length,'#be185d,#f472b6']];
+const wl={};T.filter(t=>t.st!=='COMPLETED').forEach(t=>wl[t.an]=(wl[t.an]||0)+1);const mx=Math.max(1,...Object.values(wl));
+return head('Hello, '+e(me().name.split(' ')[0])+' 👋')+`<div class="grid stats">${cards.map(c=>`<div class="stat" style="background:linear-gradient(135deg,${c[2]})"><b>${c[1]}</b><span>${c[0]}</span></div>`).join('')}</div>
+<div class="card" style="margin-top:14px"><h3>⚡ Quick actions</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" onclick="newTask()">＋ Create Task</button><button class="btn s g" onclick="go('kanban')">🧩 Open Board</button><button class="btn s g" onclick="go('inbox')">🔔 Inbox</button><button class="btn s g" onclick="go('people')">👥 Team</button><button class="btn s g" onclick="exportCSV()">⬇ Export CSV</button></div></div>
+<div class="grid cols">${listBox('📅 Today &amp; upcoming (mine)',my.filter(t=>t.st!=='COMPLETED').sort((a,b)=>a.due.localeCompare(b.due)),'Nothing due. Enjoy!')}
+${mgr()?listBox('🔍 Waiting for my review',T.filter(t=>t.st==='IN REVIEW'),'No reviews pending.'):listBox('🕘 Recently updated',[...my].sort((a,b)=>b.log[0].at.localeCompare(a.log[0].at)),'No tasks yet.')}
+${listBox('📤 Assigned by me',T.filter(t=>t.by===S.me),'You have not assigned tasks yet.')}
+<div class="card"><h3>📊 Workload (active tasks)</h3>${Object.entries(wl).sort((a,b)=>b[1]-a[1]).map(([n,v])=>`<div style="display:flex;gap:10px;align-items:center;margin:7px 0"><span style="width:110px;font-size:13px">${e(n)}</span><div class="bar" style="flex:1"><i style="width:${v/mx*100}%"></i></div><b>${v}</b></div>`).join('')}</div>
+<div class="card"><h3>🕒 Recent activity</h3>${T.flatMap(t=>t.log.map(l=>({...l,t}))).sort((a,b)=>b.at.localeCompare(a.at)).slice(0,6).map(l=>`<div class="tl" onclick="openT('${l.t.id}')" style="cursor:pointer">${e(l.txt)}<small>${e(l.t.title)} · ${ago(l.at)}</small></div>`).join('')}</div></div>`}
+if(V==='mine'||V==='all'){let a=V==='mine'?T.filter(mine):T;if(Q)a=a.filter(t=>(t.title+t.id+t.an+t.project).toLowerCase().includes(Q.toLowerCase()));if(FS)a=a.filter(t=>FS==='OVERDUE'?od(t):t.st===FS);
+return head(V==='mine'?'My Tasks':'All Tasks')+`<div style="display:flex;gap:8px;flex-wrap:wrap"><input style="flex:2;min-width:160px" placeholder="🔍 Search tasks, people, projects…" value="${e(Q)}" oninput="Q=this.value;listUpd()"><select style="flex:1;min-width:140px" onchange="FS=this.value;render()"><option value="">All statuses</option>${ST.map(s=>`<option ${FS===s?'selected':''}>${s}</option>`).join('')}<option value="OVERDUE" ${FS==='OVERDUE'?'selected':''}>OVERDUE</option></select></div>
+<div class="card" style="overflow-x:auto"><table><tr><th>Task</th><th>Assignee</th><th>Priority</th><th>Status</th><th>Due</th><th>Progress</th></tr><tbody id="tb">${rows(a)}</tbody></table></div>`}
+if(V==='kanban')return head('Board')+`<div class="mut" style="margin-bottom:8px">Drag cards between columns${mgr()?'':' (approval steps need a manager)'}.</div><div class="kb">${ST.map(s=>`<div class="kc" style="border-color:${SC[s]}" ondragover="event.preventDefault()" ondrop="drop(event,'${s}')"><h4>${s}<span>${T.filter(t=>t.st===s).length}</span></h4>${T.filter(t=>t.st===s).map(t=>`<div class="kt" draggable="true" ondragstart="event.dataTransfer.setData('t','${t.id}')" onclick="openT('${t.id}')"><b>${e(t.title)}</b>${chip(t.pri,PC[t.pri])} <div style="margin:6px 0 4px">${dl(t)}</div><small class="mut">${e(t.an)}</small></div>`).join('')}</div>`).join('')}</div>`;
+if(V==='inbox'){const n=myNotifs();return head('Inbox','<button class="btn g s" onclick="myNotifs().forEach(x=>x.r=1);save();render()">Mark all read</button>')+(n.length?n.map(x=>`<div class="ntf ${x.r?'':'u'}" onclick="readN(${x.id},'${x.tid}')">${e(x.txt)}<br><small class="mut">${ago(x.at)} · sent via ${x.ch.join(' · ')} (simulated)</small></div>`).join(''):'<div class="card mut">No notifications yet. Task assignments, reviews and comments appear here, and are queued to email and WhatsApp.</div>')}
+if(V==='people')return head('People')+`<div class="grid cols" style="margin-top:0">${S.users.map(u=>{const a=T.filter(t=>t.ae===u.email&&t.st!=='COMPLETED').length,d=T.filter(t=>t.ae===u.email&&t.st==='COMPLETED').length;return`<div class="card" style="display:flex;gap:12px"><div style="width:48px;height:48px;border-radius:50%;background:${u.c};color:#fff;display:grid;place-items:center;font-weight:800;flex-shrink:0">${e(u.name.replace(/^Dr\. /,'')[0])}</div><div><b>${e(u.name)}</b><br><small class="mut">${e(u.title)}</small><br>${chip(u.role,u.c)}<br><small class="mut">${a} active · ${d} completed</small></div></div>`}).join('')}</div>`}
+function rows(a){return a.map(t=>`<tr class="r" onclick="openT('${t.id}')"><td><b>${e(t.title)}</b><br><small class="mut">${e(t.id)} · ${e(t.project)}</small></td><td>${e(t.an)}</td><td>${chip(t.pri,PC[t.pri])}</td><td>${chip(t.st,SC[t.st])}</td><td>${e(t.due)}<br>${dl(t)}</td><td><div class="bar"><i style="width:${prog(t)}%"></i></div></td></tr>`).join('')||'<tr><td colspan="6" class="mut">No tasks match.</td></tr>'}
+function listUpd(){const a=(V==='mine'?S.tasks.filter(mine):S.tasks).filter(t=>(t.title+t.id+t.an+t.project).toLowerCase().includes(Q.toLowerCase()));$('#tb').innerHTML=rows(a)}
+function readN(id,tid){const n=S.notifs.find(x=>x.id===id);if(n)n.r=1;save();OPEN=tid;render()}
+function exportCSV(){const r=[['ID','Title','Assignee','Project','Priority','Status','Due']].concat(S.tasks.map(t=>[t.id,t.title,t.an,t.project,t.pri,t.st,t.due]));
+const b=new Blob([r.map(x=>x.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tasks.csv';a.click()}
+/* ---------- TASK ACTIONS ---------- */
+function openT(id){OPEN=id;render()}
+function closeT(){OPEN=null;render()}
+function setSt(id,st,note){const t=S.tasks.find(x=>x.id===id);if(!t)return false;
+if(['APPROVED','COMPLETED'].includes(st)&&!mgr())return toast('Only a manager can approve or complete tasks.'),false;
+if(st==='FEEDBACK REQUIRED'&&!mgr())return toast('Only a manager can request changes.'),false;
+const old=t.st;t.st=st;log(t,`changed status ${old} → ${st}`);
+if(note)t.cm.push({by:S.me,t:'💬 Feedback: '+note,at:now()});
+const mu=uid(t.m);const toA=st==='FEEDBACK REQUIRED'||st==='APPROVED'||st==='COMPLETED';
+if(toA)notify(t,`${me().name} moved "${t.title}" to ${st}${note?': '+note:''}`,t.ae,t.ap);else if(mu)notify(t,`${me().name} moved "${t.title}" to ${st}`,mu.email,mu.phone);
+save();return true}
+function drop(ev,st){ev.preventDefault();const id=ev.dataTransfer.getData('t'),t=S.tasks.find(x=>x.id===id);if(t&&t.st!==st&&setSt(id,st))render()}
+function act(id,st){if(st==='FEEDBACK REQUIRED'){const n=prompt('What changes are needed?');if(!n)return;setSt(id,st,n)}else if(!setSt(id,st))return;render()}
+function tick(id,i){const t=S.tasks.find(x=>x.id===id);t.subs[i].d=!t.subs[i].d;log(t,(t.subs[i].d?'completed':'reopened')+' subtask "'+t.subs[i].t+'"');save();render()}
+function addSub(id){const v=$('#sb').value.trim();if(!v)return;const t=S.tasks.find(x=>x.id===id);t.subs.push({t:v,d:false});log(t,'added subtask "'+v+'"');save();render()}
+function comment(id){const v=$('#cmt').value.trim();if(!v)return;const t=S.tasks.find(x=>x.id===id);t.cm.push({by:S.me,t:v,at:now()});log(t,'commented');
+const mu=uid(t.m);if(mine(t)){if(mu)notify(t,`${me().name} commented on "${t.title}"`,mu.email,mu.phone)}else notify(t,`${me().name} commented on "${t.title}"`,t.ae,t.ap);save();render()}
+function actions(t){const m=mgr(),b=(l,s,c='')=>`<button class="btn s ${c}" onclick="act('${t.id}','${s}')">${l}</button>`;let h='';
+if(t.st==='TO DO')h=b('▶ Start Task','IN PROGRESS');
+if(t.st==='IN PROGRESS')h=b('📨 Submit for Review','IN REVIEW','ok');
+if(t.st==='FEEDBACK REQUIRED')h=b('🔁 Resubmit for Review','IN REVIEW','ok');
+if(t.st==='IN REVIEW')h=m?b('✅ Approve','APPROVED','ok')+b('✍ Request Changes','FEEDBACK REQUIRED','wr'):'<span class="mut">Waiting for manager review…</span>';
+if(t.st==='APPROVED')h=m?b('🏁 Mark Completed','COMPLETED','ok'):'<span class="mut">Approved — manager will complete it.</span>';
+if(t.st==='COMPLETED'&&m)h=b('↩ Reopen','IN PROGRESS','g');return h}
+function drawer(){const t=S.tasks.find(x=>x.id===OPEN);if(!t){OPEN=null;return}const mu=uid(t.m),cr=uid(t.by);
+const d=document.createElement('div');d.className='ov';d.onclick=ev=>{if(ev.target===d)closeT()};
+d.innerHTML=`<div class="dr"><div style="display:flex;justify-content:space-between"><small class="mut">${e(t.id)} · ${e(t.project)}</small><button class="btn g s" onclick="closeT()">✕</button></div>
+<h2 style="margin:6px 0 10px">${e(t.title)}</h2><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">${chip(t.st,SC[t.st])}${chip(t.pri,PC[t.pri])}${dl(t)}</div>
+<div class="card" style="margin:12px 0;font-size:13px">👤 Assigned to: <b>${e(t.an)}</b> ${uid2(t)?'':'<span class="chip" style="background:#f59e0b">pending signup</span>'}<br>🧑‍💼 Manager: <b>${e(mu?.name)}</b> · Created by ${e(cr?.name)}<br>📅 Due: <b>${e(t.due)}</b> · Progress ${prog(t)}%<div class="bar" style="margin-top:6px"><i style="width:${prog(t)}%"></i></div></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">${actions(t)}</div>
+<h3>Description</h3><div style="white-space:pre-wrap">${e(t.desc)||'—'}</div>
+<h3>Subtasks</h3>${t.subs.map((s,i)=>`<label style="display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx);cursor:pointer"><input type="checkbox" style="width:auto;margin:6px 0" ${s.d?'checked':''} onchange="tick('${t.id}',${i})">${s.d?'<s class="mut">'+e(s.t)+'</s>':e(s.t)}</label>`).join('')}
+<div style="display:flex;gap:6px"><input id="sb" placeholder="Add subtask…"><button class="btn g s" style="height:40px;margin-top:4px" onclick="addSub('${t.id}')">Add</button></div>
+<h3>Comments</h3>${t.cm.map(c=>`<div class="cm"><b>${e(uid(c.by)?.name)}</b> <small>${ago(c.at)}</small><div>${e(c.t)}</div></div>`).join('')}
+<textarea id="cmt" rows="2" placeholder="Write a comment…"></textarea><button class="btn s" onclick="comment('${t.id}')">Send</button>
+<h3 style="margin-top:18px">Activity history</h3>${t.log.map(l=>`<div class="tl">${e(l.txt)}<small>${ago(l.at)}</small></div>`).join('')}</div>`;
+$('#app').appendChild(d)}
+const uid2=t=>S.users.find(u=>u.email===t.ae||u.phone===t.ap);
+function newTask(){const d=document.createElement('div');d.className='ov';d.id='mdl';d.onclick=ev=>{if(ev.target===d)d.remove()};
+d.innerHTML=`<div class="md"><h2 style="margin-top:0">＋ Quick Create Task</h2><label>Task title</label><input id="ti" placeholder="e.g. Prepare registration form">
+<label>Assign to</label><select id="as" onchange="$('#nw').style.display=this.value==='new'?'block':'none'">${S.users.map(u=>`<option value="${u.id}" ${u.id===S.me?'selected':''}>${e(u.name)}</option>`).join('')}<option value="new">➕ Someone not registered yet (invite)</option></select>
+<div id="nw" style="display:none"><label>Name</label><input id="nn"><label>Email</label><input id="ne" type="email"><label>WhatsApp number</label><input id="np" placeholder="+8801…"></div>
+<div style="display:flex;gap:8px"><div style="flex:1"><label>Due date</label><input id="du" type="date" value="${dt(7)}"></div><div style="flex:1"><label>Priority</label><select id="pr"><option>Low</option><option selected>Medium</option><option>High</option><option>Urgent</option></select></div></div>
+<label>Project</label><select id="pj">${[...new Set(S.tasks.map(t=>t.project))].map(p=>`<option>${e(p)}</option>`).join('')}</select>
+<label>Description (optional)</label><textarea id="ds" rows="3"></textarea><div class="err" id="ce"></div>
+<button class="btn" style="width:100%" onclick="saveTask()">Create &amp; notify</button></div>`;$('#app').appendChild(d);$('#ti').focus()}
+function saveTask(){const ti=$('#ti').value.trim();if(!ti)return $('#ce').textContent='Please enter a title.';
+let a;const v=$('#as').value;if(v==='new'){a={name:$('#nn').value.trim(),email:$('#ne').value.trim().toLowerCase(),phone:phone($('#np').value)};if(!a.name||!/^\S+@\S+\.\S+$/.test(a.email)||!/^\+\d{10,15}$/.test(a.phone))return $('#ce').textContent='Enter valid name, email and WhatsApp number.'}else{const u=uid(+v);a={name:u.name,email:u.email,phone:u.phone}}
+const t={id:'T-'+S.seq++,title:ti,project:$('#pj').value,an:a.name,ae:a.email,ap:a.phone,m:mgr()?S.me:2,by:S.me,pri:$('#pr').value,st:'TO DO',due:$('#du').value,desc:$('#ds').value,created:now(),subs:[],cm:[],log:[{at:now(),txt:`${me().name} created task and assigned it to ${a.name}`}]};
+S.tasks.unshift(t);notify(t,`New task assigned to you: "${ti}" (${t.pri}, due ${t.due}) by ${me().name}`,a.email,a.phone);save();$('#mdl').remove();render();
+toast(v==='new'?`Invite queued to ${a.email} & WhatsApp ${a.phone}`:'Task created & assignee notified');}
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if($('#mdl'))$('#mdl').remove();else if(OPEN)closeT()}if(ev.key==='n'&&S&&S.me&&!/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)&&!$('#mdl')){ev.preventDefault();newTask()}});
+load();boot();
+</script></body></html>
